@@ -51,3 +51,5 @@ VALUES ( 1, 'dOTAPLUS',1);
 
 INSERT INTO PlataformasPorConstructores (id,idConstructores,idPlataformas ) 
 VALUES ( 1, 1, 1);
+
+CREATE VIEW Visualisacion1 AS SELECT nombreEmpresa,tipoPlataforma FROM Plataformas,Constructores;
