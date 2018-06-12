@@ -53,3 +53,4 @@ INSERT INTO PlataformasPorConstructores (id,idConstructores,idPlataformas )
 VALUES ( 1, 1, 1);
 
 CREATE VIEW Visualisacion1 AS SELECT nombreEmpresa,tipoPlataforma FROM Plataformas,Constructores;
+alter table Torneos add FOREIGN KEY ( idConstructores) REFERENCES Constructores( id);
