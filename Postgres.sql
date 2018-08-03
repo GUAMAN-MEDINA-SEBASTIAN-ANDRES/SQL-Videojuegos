@@ -59,94 +59,57 @@ select Plataformas.tipoPlataforma,Constructores.nombreEmpresa, Torneos.premio,
 count(Plataformas.id) As Listado from (Plataformas inner join Constructores on Plataformas.id   )
 group by tipoPlataforma,nombrejuego,premio,nombreEmpresa 
 
-CREATE DATABASE VideoJUegos1;
-USE VideoJUegos1;
-
-CREATE TABLE Plataformas1(
- id   int not null primary KEY auto_increment , 
- tipoPlataforma VARCHAR(50) not null, 
- nombrePlataforma varchar(50)not null,
- idConstructores int
-);
-
-INSERT INTO Plataformas1 (id,tipoPlataforma,nombrePlataforma,idConstructores ) 
+INSERT INTO Plataformas (tipoPlataforma,nombrePlataforma,idConstructores ) 
 VALUES ( 1, 'PC','PC',1);
-INSERT INTO Plataformas1 (id,tipoPlataforma,nombrePlataforma,idConstructores ) 
+INSERT INTO Plataformas (tipoPlataforma,nombrePlataforma,idConstructores ) 
 VALUES ( 2, 'Consola','Xbox',1);
-INSERT INTO Plataformas1 (id,tipoPlataforma,nombrePlataforma,idConstructores ) 
+INSERT INTO Plataformas (tipoPlataforma,nombrePlataforma,idConstructores ) 
 VALUES ( 3, 'Consola','Psc4',1);
-INSERT INTO Plataformas1 (id,tipoPlataforma,nombrePlataforma,idConstructores ) 
-VALUES ( 4, 'Consola','Wii',1);
-select * from Plataformas1;
+INSERT INTO Plataformas (tipoPlataforma,nombrePlataforma,idConstructores ) 
+VALUES ( 'Consola','Wii',1);
 
-CREATE TABLE Constructores1(
- id   int not null primary KEY auto_increment , 
- nombreEmpresa VARCHAR(20) not null,
- idPlataformas int not null
- );
+select * from Plataformas;
  
-INSERT INTO Constructores1 (id,nombreEmpresa,idPlataformas ) 
-VALUES ( 1, 'VALVE',1);
-INSERT INTO Constructores1 (id,nombreEmpresa,idPlataformas ) 
-VALUES ( 2, 'Maicrosoft',2);
-INSERT INTO Constructores1 (id,nombreEmpresa,idPlataformas ) 
-VALUES ( 3, 'Sony',3);
-INSERT INTO Constructores1 (id,nombreEmpresa,idPlataformas ) 
-VALUES ( 4, 'Nintendo',4);
+INSERT INTO Constructores (nombreEmpresa,idPlataformas ) 
+VALUES ('VALVE',1);
+INSERT INTO Constructores (nombreEmpresa,idPlataformas ) 
+VALUES ('Maicrosoft',2);
+INSERT INTO Constructores1 (nombreEmpresa,idPlataformas ) 
+VALUES ('Sony',3);
+INSERT INTO Constructores (nombreEmpresa,idPlataformas ) 
+VALUES ('Nintendo',4);
 
-select * from Constructores1;
+select * from Constructores;
 
-CREATE TABLE Torneos1(
- id   int not null primary KEY auto_increment , 
- ubicacion VARCHAR(20) not null, 
- nombrejuego varchar(20)not null,
- premio varchar(20) not null,
- idConstructores1 int
-);
+INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores1) 
+VALUES ('Canada','Dota2', '1 millon de dolares',1);
+INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores1) 
+VALUES ('Europa','Fifa', '------',2);
+INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores1) 
+VALUES ('Canada','God Of War', '-------',3);
+INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores1) 
+VALUES ( 'Rusia','Boxeo', '1 millon de dolares',4);
 
-INSERT INTO Torneos1 (id,ubicacion,nombrejuego,premio,idConstructores1) 
-VALUES ( 1, 'Canada','Dota2', '1 millon de dolares',1);
-INSERT INTO Torneos1 (id,ubicacion,nombrejuego,premio,idConstructores1) 
-VALUES ( 2, 'Europa','Fifa', '------',2);
-INSERT INTO Torneos1 (id,ubicacion,nombrejuego,premio,idConstructores1) 
-VALUES ( 3, 'Canada','God Of War', '-------',3);
-INSERT INTO Torneos1 (id,ubicacion,nombrejuego,premio,idConstructores1) 
-VALUES ( 4, 'Rusia','Boxeo', '1 millon de dolares',4);
+select * from Torneos;
 
-select * from Torneos1;
+INSERT INTO Comunidades1 (nombreForos,idTorneos) 
+VALUES ('dOTAPLUS',1);
+INSERT INTO Comunidades1 (nombreForos,idTorneos) 
+VALUES ('ComConsola',1);
+INSERT INTO Comunidades (nombreForos,idTorneos) 
+VALUES ('ComConsola',1);
+INSERT INTO Comunidades (nombreForos,idTorneos) 
+VALUES ('ComConsola',1);
 
-CREATE TABLE Comunidades1(
- id   int not null primary KEY auto_increment , 
- nombreForos VARCHAR(20) not null, 
- idTorneos1 int not null
-);
+select * from Comunidades;
 
-INSERT INTO Comunidades1 (id,nombreForos,idTorneos1) 
-VALUES ( 1, 'dOTAPLUS',1);
-INSERT INTO Comunidades1 (id,nombreForos,idTorneos1) 
-VALUES ( 2, 'ComConsola',1);
-INSERT INTO Comunidades1 (id,nombreForos,idTorneos1) 
-VALUES ( 3, 'ComConsola',1);
-INSERT INTO Comunidades1 (id,nombreForos,idTorneos1) 
-VALUES ( 4, 'ComConsola',1);
-
-select * from Comunidades1;
- 
- CREATE TABLE PlataformasPorConstructores1(
- id   int not null  ,
- idConstructores int not null,
- idPlataformas int not null,
- FOREIGN KEY ( idConstructores) REFERENCES Constructores1( id),
- FOREIGN KEY ( idPlataformas) REFERENCES Plataformas1( id)
-);
-
-INSERT INTO PlataformasPorConstructores1 (id,idConstructores,idPlataformas ) 
+INSERT INTO PlataformasPorConstructores1 (idConstructores,idPlataformas ) 
 VALUES ( 1, 1, 1);
-INSERT INTO PlataformasPorConstructores1 (id,idConstructores,idPlataformas ) 
+INSERT INTO PlataformasPorConstructores1 (idConstructores,idPlataformas ) 
 VALUES ( 2,2,2);
-INSERT INTO PlataformasPorConstructores1 (id,idConstructores,idPlataformas ) 
+INSERT INTO PlataformasPorConstructores1 (idConstructores,idPlataformas ) 
 VALUES ( 3,3,3);
-INSERT INTO PlataformasPorConstructores1 (id,idConstructores,idPlataformas ) 
+INSERT INTO PlataformasPorConstructores1 (idConstructores,idPlataformas ) 
 VALUES ( 4,4,4);
 
 select * from PlataformasPorConstructores1;
