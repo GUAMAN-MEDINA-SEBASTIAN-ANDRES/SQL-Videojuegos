@@ -49,7 +49,26 @@ BEGIN
 end $$
 
 DELIMITER ;
+
 CALL hola();
+
+DELIMITER $$
+
+DROP procedure IF exists `VideoJUegos`.`hola2`$$
+CREATE procedure `VideoJUegos`.`hola2`()
+BEGIN
+ 
+ START TRANSACTION;
+ 
+ insert into Constructores(nombreEmpresa) value ('CAPCOM');
+
+COMMIT;
+
+select * from Constructores;
+
+end $$
+
+DELIMITER ;
 
 update constructores
 set nombreEmpresa='VALVE'
