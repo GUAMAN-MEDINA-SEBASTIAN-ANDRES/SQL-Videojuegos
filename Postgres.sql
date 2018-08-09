@@ -39,16 +39,62 @@ CREATE TABLE Comunidades(
 -- drop database VideoJUegos ;
 
 DELIMITER $$
-
-DROP procedure IF exists `VideoJUegos`.`hola`$$
-CREATE procedure `VideoJUegos`.`hola`()
+USE `videojuegos`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insertars`(
+partipoPlataforma VARCHAR(50), 
+parNombrePlataforma varchar(50)
+)
 BEGIN
- 
- insert into Constructores(nombreEmpresa) value ('DIGITAL STREMEX');
 
-end $$
+insert into Plataformas
+(tipoPlataforma, nombrePlataforma)
+value (
+partipoPlataforma, 
+parNombrePlataforma);
+END$$
 
 DELIMITER ;
+;
+
+
+DELIMITER $$
+USE `videojuegos`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `borrars`(
+parId int
+)
+BEGIN
+
+delete from Plataformas where id=parId;
+
+END$$
+
+DELIMITER ;
+;
+
+DELIMITER $$
+USE `videojuegos`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Actualizars`(
+parId int,
+parTipoPlataforma VARCHAR(50), 
+parNombrePlataforma varchar(50)
+)
+BEGIN
+
+update Plataformas set 
+tipoPlataforma=parTipoPlataforma,
+nombrePlataforma=parNombrePlataforma 
+where id=parId;
+
+END$$
+
+DELIMITER ;
+;
+
+call insertar('xz<x', 'hola');
+call Actualizar (5,'consola','hola');
+call borrar (6);
+
+select*from videojuegos.Plataformas;
 
 CALL hola();
 
