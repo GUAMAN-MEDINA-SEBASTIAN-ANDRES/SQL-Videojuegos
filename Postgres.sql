@@ -39,6 +39,24 @@ CREATE TABLE Comunidades(
 -- drop database VideoJUegos ;
 
 DELIMITER $$
+CREATE PROCEDURE cursorPrototip (
+) BEGIN
+
+  DECLARE v_nnombre varchar(20);
+  DECLARE v_raza varchar(20);
+
+  DECLARE fin INTEGER DEFAULT 0;
+
+  DECLARE Mascotas_MiCursor CURSOR FOR 
+    SELECT Nombre, Raza FROM Mascotas;
+
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin=1;
+
+  OPEN Mascotas_MiCursor;
+END$$
+DELIMITER ;
+
+DELIMITER $$
 USE `videojuegos`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Insertars`(
 partipoPlataforma VARCHAR(50), 
