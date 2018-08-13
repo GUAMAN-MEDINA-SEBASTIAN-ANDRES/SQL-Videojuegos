@@ -90,6 +90,23 @@ END$$
 DELIMITER ;
 ;
 
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `LeerEventoDias`(
+parId INT
+)
+BEGIN
+
+select * from EventoDias 
+where id=parId;
+
+END$$
+
+DELIMITER ;
+;
+
+call LeerEventoDias(2);
+
 call insertar('xz<x', 'hola');
 call Actualizar (5,'consola','hola');
 call borrar (6);
