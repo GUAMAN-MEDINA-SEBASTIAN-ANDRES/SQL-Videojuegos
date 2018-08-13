@@ -38,27 +38,17 @@ CREATE TABLE Comunidades(
 
 -- drop database VideoJUegos ;
 
-DELIMITER $$
-CREATE PROCEDURE cursorPrototip (
-) BEGIN
+-- Todos los delimiter se ejecutaran creando un sp por la herramienta de mysql
+-- para ver mejoer su funcionamiento creelos mediante esa herramienta 
+-- solo copie y pegue los comandos.
 
-  DECLARE v_nnombre varchar(20);
-  DECLARE v_raza varchar(20);
 
-  DECLARE fin INTEGER DEFAULT 0;
 
-  DECLARE Mascotas_MiCursor CURSOR FOR 
-    SELECT Nombre, Raza FROM Mascotas;
+-- CRUD
 
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin=1;
-
-  OPEN Mascotas_MiCursor;
-END$$
-DELIMITER ;
 
 DELIMITER $$
-USE `videojuegos`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Insertars`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insertar`(
 partipoPlataforma VARCHAR(50), 
 parNombrePlataforma varchar(50)
 )
@@ -72,12 +62,38 @@ parNombrePlataforma);
 END$$
 
 DELIMITER ;
-;
-
 
 DELIMITER $$
-USE `videojuegos`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `borrars`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Leer`(
+)
+BEGIN
+select * from Plataformas;
+select * from torneos;
+select * from Constructores;
+select * from Comunidades;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Actualizar`(
+parId int,
+parTipoPlataforma VARCHAR(50), 
+parNombrePlataforma varchar(50)
+)
+BEGIN
+
+update Plataformas 
+set tipoPlataforma=parTipoPlataforma,
+nombrePlataforma=parNombrePlataforma 
+where id=parId;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `borrar`(
 parId int
 )
 BEGIN
@@ -87,61 +103,19 @@ delete from Plataformas where id=parId;
 END$$
 
 DELIMITER ;
-;
-
-DELIMITER $$
-USE `videojuegos`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Actualizars`(
-parId int,
-parTipoPlataforma VARCHAR(50), 
-parNombrePlataforma varchar(50)
-)
-BEGIN
-
-update Plataformas set 
-tipoPlataforma=parTipoPlataforma,
-nombrePlataforma=parNombrePlataforma 
-where id=parId;
-
-END$$
-
-DELIMITER ;
-;
 
 DELIMITER $$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `LeerEventoDias`(
-parId INT
-)
-BEGIN
+-- TRANSACCION
 
-select * from EventoDias 
-where id=parId;
-
-END$$
-
-DELIMITER ;
-;
-
-call LeerEventoDias(2);
-
-call insertar('xz<x', 'hola');
-call Actualizar (5,'consola','hola');
-call borrar (6);
-
-select*from videojuegos.Plataformas;
-
-CALL hola();
-
-DELIMITER $$
-
-DROP procedure IF exists `VideoJUegos`.`hola2`$$
-CREATE procedure `VideoJUegos`.`hola2`()
+DROP procedure IF exists `VideoJUegos`.`transaccion`$$
+CREATE procedure `VideoJUegos`.`transaccion`()
 BEGIN
  
  START TRANSACTION;
  
- insert into Constructores(nombreEmpresa) value ('CAPCOM');
+ insert into Constructores(nombreEmpresa) 
+ value ('CAPCOM');
 
 COMMIT;
 
@@ -151,12 +125,73 @@ end $$
 
 DELIMITER ;
 
+-- MULTIUSUARIO
+
 update constructores
 set nombreEmpresa='VALVE'
 where id=1
 and nombreEmpresa='HOLA';
 
+-- SELECCIONES Y LLAMADAS
+
+call Leer();
+call insertar('xz<x', 'hola');
+call Actualizar (5,'consola','hola');
+call borrar (6);
+CALL transaccion();
+
 select * from PlataformasPorConstructores;
+
+select * from Constructores;
+
+select * from Torneos;
+
+select * from Comunidades;
+
+select * from PlataformasPorConstructores;
+
+select count(*) from Plataformas;
+
+select id,nombrePlataforma  
+from Plataformas 
+where id >0 
+and id < 3;
+
+select * from comunidades 
+inner join plataformas 
+on comunidades.id= plataformas.id;
+
+select * from Torneos
+inner join Constructores 
+on Torneos.id= Constructores.id 
+where torneos.nombrejuego='Dota2';
+
+select * from Constructores 
+inner join PlataformasPorConstructores
+on Constructores.id= PlataformasPorConstructores.id 
+where Constructores.id >0 
+and Constructores.id < 3;
+
+select * from Constructores 
+left join PlataformasPorConstructores 
+on Constructores.id= PlataformasPorConstructores.id 
+where Constructores.id >0 
+and Constructores.id < 3;
+
+select * from Constructores
+right join PlataformasPorConstructores
+on Constructores.id= PlataformasPorConstructores.id 
+where Constructores.id >0 
+and Constructores.id < 3;
+
+select * from Torneos 
+inner join Comunidades 
+on Torneos.id= Comunidades.id 
+where Comunidades.id >0 
+and Comunidades.id < 3
+group by nombrejuego order by id;
+
+-- INSERCIONES
 
 INSERT INTO Plataformas (tipoPlataforma,nombrePlataforma) 
 VALUES ('PC','PC');
@@ -167,8 +202,6 @@ VALUES ('Consola','Psc4');
 INSERT INTO Plataformas (tipoPlataforma,nombrePlataforma) 
 VALUES ('Consola','Wii');
 
-select * from Plataformas;
- 
 INSERT INTO Constructores (nombreEmpresa) 
 VALUES ('VALVE');
 INSERT INTO Constructores (nombreEmpresa)  
@@ -177,19 +210,6 @@ INSERT INTO Constructores (nombreEmpresa)
 VALUES ('Sony');
 INSERT INTO Constructores (nombreEmpresa)  
 VALUES ('Nintendo');
-
-select * from Constructores;
-
-INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores) 
-VALUES ('Canada','Dota2', '1 millon de dolares',1);
-INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores) 
-VALUES ('Europa','Fifa', '------',2);
-INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores) 
-VALUES ('Canada','God Of War', '-------',3);
-INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores) 
-VALUES ( 'Rusia','Boxeo', '1 millon de dolares',4);
-
-select * from Torneos;
 
 INSERT INTO Comunidades (nombreForos,idTorneos) 
 VALUES ('dOTAPLUS',1);
@@ -200,7 +220,14 @@ VALUES ('ComConsola',3);
 INSERT INTO Comunidades (nombreForos,idTorneos) 
 VALUES ('ComConsola',4);
 
-select * from Comunidades;
+INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores) 
+VALUES ('Canada','Dota2', '1 millon de dolares',1);
+INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores) 
+VALUES ('Europa','Fifa', '------',2);
+INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores) 
+VALUES ('Canada','God Of War', '-------',3);
+INSERT INTO Torneos (ubicacion,nombrejuego,premio,idConstructores) 
+VALUES ( 'Rusia','Boxeo', '1 millon de dolares',4);
 
 INSERT INTO PlataformasPorConstructores (idConstructores,idPlataformas ) 
 VALUES (1,1);
@@ -210,40 +237,4 @@ INSERT INTO PlataformasPorConstructores1 (idConstructores,idPlataformas )
 VALUES (3,3);
 INSERT INTO PlataformasPorConstructores1 (idConstructores,idPlataformas ) 
 VALUES (4,4);
-
-select * from PlataformasPorConstructores1;
-
-select count(*) from Plataformas1;
-
-select id,nombrePlataforma  from Plataformas1 where id >0 and id < 3;
-
-select * from comunidades1 inner join plataformas1 on comunidades1.id= plataformas1.id;
-
-select * from Torneos1 
-inner join Constructores1 
-on Torneos1.id= Constructores1.id 
-where torneos1.nombrejuego='Dota2';
-
-select * from Constructores1 
-inner join PlataformasPorConstructores1 
-on Constructores1.id= PlataformasPorConstructores1.id 
-where Constructores1.id >0 and Constructores1.id < 3;
-
-select * from Constructores1 
-left join PlataformasPorConstructores1 
-on Constructores1.id= PlataformasPorConstructores1.id 
-where Constructores1.id >0 and Constructores1.id < 3;
-
-select * from Constructores1 
-right join PlataformasPorConstructores1 
-on Constructores1.id= PlataformasPorConstructores1.id 
-where Constructores1.id >0 and Constructores1.id < 3;
-
-select * from Torneos1 
-inner join Comunidades1 
-on Torneos1.id= Comunidades1.id 
-where Comunidades1.id >0 and Comunidades1.id < 3
-group by nombrejuego order by id
-;
-
 
